@@ -1,0 +1,12 @@
+  #tl_listing {
+	position:relative;
+  }
+  
+  #nodePicker {
+	position:absolute;
+	border:1px solid #D49822;
+	width:150px;
+	right:3px;
+	top:4px;
+	background-color:transparent;
+  }
