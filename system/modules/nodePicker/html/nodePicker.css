@@ -10,3 +10,7 @@
 	top:4px;
 	background-color:transparent;
   }
+  
+  #tl_breadcrumb {
+    padding-right:160px;
+  }
