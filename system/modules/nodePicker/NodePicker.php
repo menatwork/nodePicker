@@ -51,7 +51,7 @@ class NodePicker extends Backend
 			
             $this->strSelect = "";
 
-            $arrCurrentPage = $this->Database->prepare("SELECT id, rootid, parents, title FROM tl_page WHERE id = ?")
+            $arrCurrentPage = $this->Database->prepare("SELECT id, rootid, parents, title FROM tl_page WHERE id = ? ")
                     ->execute($this->intNode)
                     ->fetchAllAssoc();
 
@@ -102,7 +102,7 @@ class NodePicker extends Backend
             $strBlank .= "&nbsp;&nbsp;&nbsp;&nbsp;";
 		}
 
-        $arrPages = $this->Database->prepare("SELECT id, title FROM tl_page WHERE " . $pid . " IN(parents)")
+        $arrPages = $this->Database->prepare("SELECT id, title FROM tl_page WHERE " . $pid . " IN(parents) ORDER BY sorting")
                 ->execute()
                 ->fetchAllAssoc();
 
