@@ -31,7 +31,7 @@ class NodePicker extends Backend
 {
     protected $strSelect;
     protected $intNode;
-
+	 
     public function outputBackendTemplate($strContent, $strTemplate)
     {
         // Check if node is set
@@ -45,7 +45,7 @@ class NodePicker extends Backend
 		}
         
         // Only for some special sites
-        if ($strTemplate == 'be_main' && ($this->Input->get("do") == "article" || $this->Input->get("do") == "page" ) && $this->Input->get("table") == "")
+        if ($strTemplate == 'be_main' && ($this->Input->get("do") == "article" || $this->Input->get("do") == "page" ) && $this->Input->get("table") == "" && $this->Input->get("act") == "")
         {
 			// $GLOBALS['TL_CSS'][] = 'system/modules/nodePicker/html/nodePicker.css';
 			

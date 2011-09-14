@@ -27,12 +27,14 @@
  * @filesource
  */
 
+$objInput = Input::getInstance();
+ 
 /*
  * Hooks
  */
 $GLOBALS['TL_HOOKS']['outputBackendTemplate'][] = array('NodePicker', 'outputBackendTemplate');
 
-if (TL_MODE == 'BE')
+if (TL_MODE == 'BE' && ($objInput->get("do") == "article" || $objInput->get("do") == "page" ) && $objInput->get("table") == "" && $objInput->get("act") == "")
 {
     $GLOBALS['TL_CSS']['nodePicker'] = "system/modules/nodePicker/html/nodePicker.css";
 }
