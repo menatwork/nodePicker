@@ -1,4 +1,7 @@
-<?php if (!defined('TL_ROOT')) die('You cannot access this file directly!');
+<?php
+
+if (!defined('TL_ROOT'))
+    die('You cannot access this file directly!');
 
 /**
  * Contao Open Source CMS
@@ -26,62 +29,78 @@
  * @license    GNU/LGPL
  * @filesource
  */
-
 class NodePicker extends Backend
 {
+
     protected $strSelect;
     protected $intNode;
-	 
+
+    protected function findRootPage($intPID)
+    {
+        $arrPages = $this->Database
+                ->prepare("SELECT * FROM tl_page WHERE id=?")
+                ->limit(1)
+                ->execute($intPID)
+                ->fetchAllAssoc();
+
+        if ($arrPages[0]["pid"] == 0)
+        {
+            return $arrPages[0];
+        }
+        else
+        {
+            return $this->findRootPage($arrPages[0]["pid"]);
+        }
+    }
+
     public function outputBackendTemplate($strContent, $strTemplate)
     {
         // Check if node is set
         if ($_SESSION['BE_DATA']['tl_page_node'] == 0)
-		{
+        {
             return $strContent;
-		}
+        }
         else
-		{
+        {
             $this->intNode = $_SESSION['BE_DATA']['tl_page_node'];
-		}
-        
+        }
+
         // Only for some special sites
         if ($strTemplate == 'be_main' && ($this->Input->get("do") == "article" || $this->Input->get("do") == "page" ) && $this->Input->get("table") == "" && $this->Input->get("act") == "")
         {
-			// $GLOBALS['TL_CSS'][] = 'system/modules/nodePicker/html/nodePicker.css';
-			
+            // $GLOBALS['TL_CSS'][] = 'system/modules/nodePicker/html/nodePicker.css';
+
             $this->strSelect = "";
 
-            $arrCurrentPage = $this->Database->prepare("SELECT id, rootid, parents, title FROM tl_page WHERE id = ? ")
+            $arrCurrentPage = $this->Database->prepare("SELECT id, pid, title FROM tl_page WHERE id = ? ")
                     ->execute($this->intNode)
                     ->fetchAllAssoc();
 
             if (count($arrCurrentPage) == 0)
-			{
+            {
                 return $strContent;
-			}
+            }
 
             $this->strSelect = '';
             $this->strSelect .= '<select class="tl_select" id="nodePicker" name="nodePicker" onchange="window.location=this.options[this.selectedIndex].value">';
 
-            if ($arrCurrentPage[0]['parents'] == 0)
+            if ($arrCurrentPage[0]['pid'] == 0)
             {
-                $arrRootPage = $arrCurrentPage;
+                $arrRootPage = $arrCurrentPage[0];
             }
             else
             {
-                $arrRootPage = $this->Database->prepare("SELECT id, rootid, parents, title FROM tl_page WHERE id = ?")
-                        ->execute($arrCurrentPage[0]["rootid"])
-                        ->fetchAllAssoc();
+                $arrRootPage = $this->findRootPage($arrCurrentPage[0]['pid']);
             }
 
-            $this->strSelect .= '<option value="' . $this->Environment->base . $this->Environment->request . "&node=" . $arrRootPage[0]["id"] . '"';
-            if ($this->intNode == $arrRootPage[0]["id"])
-			{
+            $this->strSelect .= '<option value="' . $this->Environment->base . $this->Environment->request . "&node=" . $arrRootPage["id"] . '"';
+            if ($this->intNode == $arrRootPage["id"])
+            {
                 $this->strSelect .= ' selected="selected"';
-			}
-            $this->strSelect .= '>' . $arrRootPage[0]["title"] . '</option>';
+            }
+            $this->strSelect .= '>' . $arrRootPage["title"] . '</option>';
 
-            $this->recursivePagination($arrRootPage[0]["id"], 1);
+            $this->recursivePagination($arrRootPage["id"], 1);
 
             $this->strSelect .= '</select>';
 
@@ -94,30 +113,30 @@ class NodePicker extends Backend
         return $strContent;
     }
 
-    public function recursivePagination($pid, $level)
+    public function recursivePagination($id, $level)
     {
         $strBlank = "";
-        for ($i = 0; $i < $level; $i++) 
-		{
+        for ($i = 0; $i < $level; $i++)
+        {
             $strBlank .= "&nbsp;&nbsp;&nbsp;&nbsp;";
-		}
+        }
 
-        $arrPages = $this->Database->prepare("SELECT id, title FROM tl_page WHERE " . $pid . " IN(parents) ORDER BY sorting")
-                ->execute()
+        $arrPages = $this->Database->prepare("SELECT id, title FROM tl_page WHERE pid=? ORDER BY sorting")
+                ->execute($id)
                 ->fetchAllAssoc();
 
         if (count($arrPages) == 0)
-		{
+        {
             return;
-		}
+        }
 
         foreach ($arrPages as $key => $value)
         {
             $this->strSelect .= '<option value="' . $this->Environment->base . $this->Environment->request . "&node=" . $value["id"] . '"';
             if ($this->intNode == $value["id"])
-			{
+            {
                 $this->strSelect .= ' selected="selected"';
-			}
+            }
             $this->strSelect .= '>' . $strBlank . $value["title"] . '</option>';
 
             $this->recursivePagination($value["id"], $level + 1);
@@ -125,4 +144,5 @@ class NodePicker extends Backend
     }
 
 }
+
 ?>
