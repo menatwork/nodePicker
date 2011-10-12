@@ -13,4 +13,9 @@
   
   #tl_breadcrumb {
     padding-right:160px;
+	padding-bottom:4px;
+  }
+  
+  #tl_breadcrumb li {
+    padding-top:1px;
   }
