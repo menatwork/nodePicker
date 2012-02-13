@@ -106,6 +106,10 @@ class NodePicker extends Backend
 
             $this->strSelect .= '</select></div>';
 
+                        $this->strSelect .= '<script>
+new Chosen($("nodePicker"));
+</script>';
+
             $pattern = '/<ul.* id=\".*tl_breadcrumb.*\".*>/i';
             preg_match($pattern, $strContent, $matches, PREG_OFFSET_CAPTURE);
 
