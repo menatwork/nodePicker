@@ -81,8 +81,10 @@ class NodePicker extends Backend
                 return $strContent;
             }
 
+            $strVersion = (version_compare(VERSION, "2.11", ">=")) ? 'class="version-211" ' : '';
+            
             $this->strSelect = '';
-            $this->strSelect .= '<select class="tl_select" id="nodePicker" name="nodePicker" onchange="window.location=this.options[this.selectedIndex].value">';
+            $this->strSelect .= '<div ' . $strVersion . 'id="nodePicker_container"><select class="tl_select" id="nodePicker" name="nodePicker" onchange="window.location=this.options[this.selectedIndex].value">';
 
             if ($arrCurrentPage[0]['pid'] == 0)
             {
@@ -102,7 +104,7 @@ class NodePicker extends Backend
 
             $this->recursivePagination($arrRootPage["id"], 1);
 
-            $this->strSelect .= '</select>';
+            $this->strSelect .= '</select></div>';
 
             $pattern = '/<ul.* id=\".*tl_breadcrumb.*\".*>/i';
             preg_match($pattern, $strContent, $matches, PREG_OFFSET_CAPTURE);

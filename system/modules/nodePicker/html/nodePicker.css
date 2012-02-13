@@ -2,20 +2,29 @@
 	position:relative;
   }
   
-  #nodePicker {
+  #nodePicker_container {
 	position:absolute;
+	width:160px;
+	right:4px;
+	top:5px;
+  }
+  
+  #nodePicker_container.version-211 {
+	top:3px;
+	right:2px;
+  }
+  
+  #nodePicker {
 	border:1px solid #D49822;
-	width:150px;
-	right:3px;
-	top:4px;
+	width:160px;
 	background-color:transparent;
   }
   
   #tl_breadcrumb {
-    padding-right:160px;
+	padding-right:160px;
 	padding-bottom:4px;
   }
   
   #tl_breadcrumb li {
-    padding-top:1px;
+	padding-top:1px;
   }
